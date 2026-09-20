@@ -31,6 +31,14 @@ Turn a "帮我提交/推送" request into one safe, deterministic flow: `git add
 | chore | 🔧 | maintenance, no production code |
 | revert | ⏪ | reverting a commit |
 
+## License Default
+
+When the user asks to publish, package, or initialize a repository and has not specified a license, default to MIT:
+
+- Add a `LICENSE` file with the current year and the repository owner's name (and email if provided) as the copyright holder.
+- Update the `README.md` license section to reference MIT.
+- Do not change an existing license without being asked.
+
 ## Safety
 
 - Only push when the user asked to push; a bare "提交" means commit only.

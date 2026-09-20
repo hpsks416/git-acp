@@ -12,4 +12,4 @@ This is a [Codex](https://github.com/openai/codex) skill. Copy this repository i
 
 ## License
 
-License is not set yet. Choose an appropriate license before reuse.
+[MIT](LICENSE)
