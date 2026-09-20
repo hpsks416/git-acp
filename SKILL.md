@@ -1,13 +1,30 @@
 ---
 name: git-acp
-description: One-click git add/commit/push in the current repo: stage changes, write a Conventional Commits + Gitmoji message, commit, and push. Use when the user asks to commit, submit, or push their work.
+description: One-click git add/commit/push using the local gacp-studio panel first to reduce token usage, with direct git as fallback. Use when the user asks to commit, submit, or push their work.
 ---
 
 # Git ACP (One-Click Commit)
 
 Turn a "帮我提交/推送" request into one safe, deterministic flow: `git add` → `git commit` → `git push`, using a Conventional Commits message with a leading Gitmoji emoji.
 
-## Workflow
+## Preferred path: local gacp-studio
+
+To keep token usage low, delegate git inspection and execution to the local gacp-studio panel first. It only binds to `127.0.0.1` and performs the real `git add / commit / push` commands.
+
+- Studio directory: `C:\Users\Razer\Documents\Codex\2026-09-20\y\gacp-studio` (override with `GACP_STUDIO_DIR`).
+- Start it headless: `python "<GACP_STUDIO_DIR>\server.py" --no-browser`.
+- Base URL: `http://127.0.0.1:8787` (port override: `GACP_STUDIO_PORT`).
+- Verify with `GET /api/health`.
+
+Use these compact JSON endpoints instead of rendering the web UI:
+
+1. Inspect: `GET /api/repo?repo=<absolute repo path>` returns branch, remote, ahead/behind, staged/unstaged/untracked files, and recent commits. If there is nothing to commit, stop and say so.
+2. Commit + optional push: `POST /api/commit` with `{"repo_path":"<absolute path>","message":"<emoji> <type>(<scope>): <subject>","push":true|false}`.
+3. Push only: `POST /api/push` with `{"repo_path":"<absolute path>"}`.
+
+Still build the message yourself with the table below. If gacp-studio is missing, cannot be started, or `/api/health` fails, fall back to direct git.
+
+## Fallback: direct git
 
 1. Inspect first. Run `git status --porcelain=v1 -b` and `git branch --show-current`. If there is nothing to commit, stop and say so.
 2. Build the message. Pick the closest type from the table below, add an optional scope, keep the subject imperative and short. Add `!` and a `BREAKING CHANGE:` footer only for breaking changes.
